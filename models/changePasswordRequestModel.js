@@ -3,15 +3,11 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 
-const leaveRequestSchema = new Schema(
+const changePasswordSchema = new Schema(
     {
         user_id: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
-        },
-        reason: {
-            type: String,
             required: true,
         },
         status: {
@@ -25,18 +21,6 @@ const leaveRequestSchema = new Schema(
             ref: "User",
             required: false,
         },
-        from: {
-            type: String,
-            required: false,
-        },
-        to: {
-            type: String,
-            required: false,
-        },
-        full_day: {
-            type: Boolean,
-            required: false,
-        },
     },
     {
         timestamps: true
@@ -44,5 +28,5 @@ const leaveRequestSchema = new Schema(
 );
 
 
-const LeaveRequest = model("LeaveRequest", leaveRequestSchema);
-export default LeaveRequest;
+const ChangePassword = model("ChangePassword", changePasswordSchema);
+export default ChangePassword;
