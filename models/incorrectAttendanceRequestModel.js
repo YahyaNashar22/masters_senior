@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 
-const changePasswordSchema = new Schema(
+const incorrectAttendanceSchema = new Schema(
     {
         user_id: {
             type: Schema.Types.ObjectId,
@@ -21,6 +21,14 @@ const changePasswordSchema = new Schema(
             ref: "User",
             required: false,
         },
+        from: {
+            type: String,
+            required: true,
+        },
+        to: {
+            type: String,
+            required: true,
+        },
     },
     {
         timestamps: true
@@ -28,5 +36,5 @@ const changePasswordSchema = new Schema(
 );
 
 
-const ChangePasswordRequest = model("ChangePasswordRequest", changePasswordSchema);
-export default ChangePasswordRequest;
+const IncorrectAttendanceRequest = model("IncorrectAttendanceRequest", incorrectAttendanceSchema);
+export default IncorrectAttendanceRequest;
