@@ -11,6 +11,7 @@ import bodyParser from 'body-parser';
 import databaseConnection from './db.js';
 
 import userRoutes from "./routes/userRoutes.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 
 
 // Declaration
@@ -36,8 +37,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes / APIs
 app.get('/api/', (req, res) => res.send("Live!"));
 
-// User routes
 app.use("/api/users", userRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 
 
