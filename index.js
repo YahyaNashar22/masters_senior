@@ -1,3 +1,6 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
 import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
@@ -11,6 +14,7 @@ import databaseConnection from './db.js';
 // Declaration
 dotenv.config();
 const app = express();
+
 
 // CORS Policies
 app.use(cors({
@@ -30,6 +34,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes / APIs
 app.get('/api/', (req, res) => res.send("Live!"));
 
+
+
+
+
+
+
+// Get the directory name (ESM does not support __dirname)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from the React frontend
+app.use(express.static(path.join(__dirname, "client", "build")));
+
+// Serve the React frontend for all unknown routes
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 
 // Connect to server
