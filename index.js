@@ -15,7 +15,8 @@ import sessionRoutes from "./routes/sessionRoutes.js";
 import leaveRequestRoutes from "./routes/leaveRequestRoutes.js";
 import changePasswordRequestRoutes from "./routes/changePasswordRequestRoutes.js";
 import incorrectAttendanceRequestRoutes from "./routes/incorrectAttendanceRequestRoutes.js";
-
+import taskRoutes from "./routes/taskRoutes.js";
+import escalationRequestRoutes from "./routes/escalationRequestRoutes.js";
 
 // Declaration
 dotenv.config();
@@ -45,7 +46,8 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/leave-requests", leaveRequestRoutes);
 app.use("/api/change-password-requests", changePasswordRequestRoutes);
 app.use("/api/incorrect-attendance", incorrectAttendanceRequestRoutes);
-
+app.use("/api/tasks", taskRoutes);
+app.use("/api/escalations", escalationRequestRoutes);
 
 
 // Get the directory name (ESM does not support __dirname)
