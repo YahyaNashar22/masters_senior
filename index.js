@@ -12,6 +12,7 @@ import databaseConnection from './db.js';
 
 import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
+import leaveRequestRoutes from "./routes/leaveRequestRoutes.js";
 
 
 // Declaration
@@ -39,7 +40,7 @@ app.get('/api/', (req, res) => res.send("Live!"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/sessions", sessionRoutes);
-
+app.use("/api/leave-requests", leaveRequestRoutes);
 
 
 
