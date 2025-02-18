@@ -1,5 +1,11 @@
+import CreateUserForm from "../components/CreateUserForm";
+
 const Dashboard = () => {
-  return <main>Dashboard</main>;
+  return (
+    <main>
+      <CreateUserForm />
+    </main>
+  );
 };
 
 export default Dashboard;
