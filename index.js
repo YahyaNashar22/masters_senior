@@ -14,6 +14,7 @@ import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import leaveRequestRoutes from "./routes/leaveRequestRoutes.js";
 import changePasswordRequestRoutes from "./routes/changePasswordRequestRoutes.js";
+import incorrectAttendanceRequestRoutes from "./routes/incorrectAttendanceRequestRoutes.js";
 
 
 // Declaration
@@ -43,6 +44,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/leave-requests", leaveRequestRoutes);
 app.use("/api/change-password-requests", changePasswordRequestRoutes);
+app.use("/api/incorrect-attendance", incorrectAttendanceRequestRoutes);
 
 
 
