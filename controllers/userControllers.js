@@ -43,9 +43,9 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        const { query, password } = req.body;
+        const { email, password } = req.body;
 
-        const user = await User.findOne({ $or: [{ email: query }, { username: query }] });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
@@ -56,7 +56,7 @@ export const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_TOKEN, { expiresIn: "7d" });
 
         res.json({
             _id: user._id,
@@ -68,6 +68,7 @@ export const loginUser = async (req, res) => {
             token,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };
