@@ -114,6 +114,23 @@ const Sidebar = () => {
         >
           <ListItemText primary="Leave Request" />
         </ListItem>
+
+        {(user?.role == "manager" || user?.role == "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/users"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Users" />
+          </ListItem>
+        )}
       </List>
 
       <Box
