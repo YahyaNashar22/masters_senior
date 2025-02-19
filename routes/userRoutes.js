@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/", getUsers);
+router.post("/", getUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
 router.put("/:id/change-password", changePassword);

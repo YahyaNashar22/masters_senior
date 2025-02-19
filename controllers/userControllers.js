@@ -13,8 +13,8 @@ export const registerUser = async (req, res) => {
         }
 
         // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
         // Create user
         const user = await User.create({
@@ -35,6 +35,7 @@ export const registerUser = async (req, res) => {
             status: user.status,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -74,7 +75,23 @@ export const loginUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const { query, role } = req.body;
+        // Construct the search query with regex for case-insensitive search
+        const searchQuery = query
+            ? {
+                $or: [
+                    { fullname: { $regex: query, $options: "i" } },
+                    { email: { $regex: query, $options: "i" } },
+                    { username: { $regex: query, $options: "i" } },
+                ],
+            }
+            : {};
+
+        // Include role filter if provided
+        const roleFilter = role ? { role } : {};
+
+        // Find users based on search and role filters
+        const users = await User.find({ ...searchQuery, ...roleFilter });
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });

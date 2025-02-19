@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+
 import {
   TextField,
   MenuItem,
@@ -10,47 +12,55 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-
-interface UserFormData {
-  fullname: string;
-  username: string;
-  email: string;
-  password: string;
-  role: "employee" | "hr_personnel" | "supervisor" | "manager" | "system_admin";
-  status: "idle" | "blocked" | "active" | "logged_out";
-}
-
-const roles: UserFormData["role"][] = [
-  "employee",
-  "hr_personnel",
-  "supervisor",
-  "manager",
-  "system_admin",
-];
-const statuses: UserFormData["status"][] = [
-  "idle",
-  "blocked",
-  "active",
-  "logged_out",
-];
+import { roles, UserFormData } from "../interfaces";
 
 const CreateUserForm = () => {
+  const backend = import.meta.env.VITE_BACKEND;
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<UserFormData>();
   const [loading, setLoading] = useState(false);
+  //   const [supervisors, setSupervisors] = useState([]);
 
   const handleFormSubmit = async (data: UserFormData) => {
+    console.log("Sending Data:", data);
     setLoading(true);
     try {
-      console.log(data);
+      const res = await axios.post(`${backend}/users/register`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
+
+  //   useEffect(() => {
+  //     const fetchSuperVisors = async () => {
+  //       try {
+  //         const res = await axios.post(
+  //           `${backend}/users`,
+  //           {
+  //             role: "supervisor",
+  //           },
+  //           {
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //           }
+  //         );
+  //         setSupervisors(res.data);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     fetchSuperVisors();
+  //   }, [backend]);
 
   return (
     <Box
@@ -152,24 +162,6 @@ const CreateUserForm = () => {
               {roles.map((role) => (
                 <MenuItem key={role} value={role}>
                   {role}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Status</InputLabel>
-        <Controller
-          name="status"
-          control={control}
-          defaultValue="logged_out"
-          render={({ field }) => (
-            <Select {...field} label="Status">
-              {statuses.map((status) => (
-                <MenuItem key={status} value={status}>
-                  {status}
                 </MenuItem>
               ))}
             </Select>
