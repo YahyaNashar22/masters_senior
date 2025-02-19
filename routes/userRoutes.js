@@ -17,8 +17,8 @@ router.post("/login", loginUser);
 router.post("/", getUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
-router.put("/:id/change-password", changePassword);
-router.put("/:id/change-supervisor", changeSupervisor);
+router.post("/:id/change-password", changePassword);
+router.post("/:id/change-supervisor", changeSupervisor);
 router.delete("/:id", deleteUser);
 
 export default router;

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useAuthStore } from "../store.ts"; // Import Zustand store
+import { useNavigate } from "react-router-dom";
 
 type LoginFormInputs = {
   email: string;
@@ -19,6 +20,8 @@ type LoginFormInputs = {
 const Login = () => {
   const backend = import.meta.env.VITE_BACKEND;
   const { login } = useAuthStore(); // Zustand store
+
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
@@ -38,6 +41,7 @@ const Login = () => {
 
       // store user in localStorage for persistence
       localStorage.setItem("user", JSON.stringify(res.data));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
