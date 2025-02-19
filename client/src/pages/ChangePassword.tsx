@@ -20,7 +20,6 @@ const ChangePassword = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log(user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

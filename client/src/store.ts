@@ -6,6 +6,7 @@ type User = {
   email: string;
   token: string;
   role: string;
+  status: string;
 } | null;
 
 type AuthStore = {
