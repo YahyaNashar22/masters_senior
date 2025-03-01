@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import ChangePasswordRequest from "../models/changePasswordRequestModel.js";
+import Session from "../models/sessionModel.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -59,6 +60,13 @@ export const loginUser = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_TOKEN, { expiresIn: "7d" });
 
+        // Create a new session (check-in)
+        const session = await Session.create({
+            user_id: user._id,
+            check_in: new Date(),
+            check_out: null, // Will be updated on logout
+        });
+
         res.json({
             _id: user._id,
             fullname: user.fullname,
@@ -95,6 +103,27 @@ export const getUsers = async (req, res) => {
         // Find users based on search and role filters
         const users = await User.find({ ...searchQuery, ...roleFilter });
         res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const logout = async (req, res) => {
+    try {
+        const user_id = req.params.user_id;
+
+        // Find the most recent session for the user that hasn't been checked out
+        const session = await Session.findOne({
+            user_id,
+            check_out: null, // Ensure it's an active session
+        }).sort({ check_in: -1 });
+
+        if (session) {
+            session.check_out = new Date();
+            await session.save();
+        }
+
+        res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

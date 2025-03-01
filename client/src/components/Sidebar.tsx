@@ -9,7 +9,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store.ts";
-import { NavLink } from "react-router-dom"; // Import NavLink for better routing
+import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 10 minutes
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -19,6 +22,40 @@ const Sidebar = () => {
     logout();
     navigate("/login");
   };
+
+  useEffect(() => {
+    let timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        alert("You have been logged out due to inactivity.");
+        handleLogout();
+      }, INACTIVITY_TIMEOUT);
+    };
+
+    // Reset timer on user activity
+    const activityEvents = [
+      "mousemove",
+      "keydown",
+      "click",
+      "scroll",
+      "touchstart",
+    ];
+    activityEvents.forEach((event) =>
+      window.addEventListener(event, resetTimer)
+    );
+
+    // Start the timer initially
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeout);
+      activityEvents.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+    };
+  }, []);
 
   return (
     <Drawer
@@ -52,7 +89,8 @@ const Sidebar = () => {
         >
           <ListItemText primary="Tasks" />
         </ListItem>
-
+        {/* Logic for this is included in the sign in/out apis */ }
+        {/* 
         <ListItem
           component={NavLink}
           to="/attendance"
@@ -66,8 +104,7 @@ const Sidebar = () => {
           }}
         >
           <ListItemText primary="Attendance" />
-        </ListItem>
-
+        </ListItem> */}
         <ListItem
           component={NavLink}
           to="/change-password"
@@ -82,7 +119,6 @@ const Sidebar = () => {
         >
           <ListItemText primary="Change Password" />
         </ListItem>
-
         <ListItem
           component={NavLink}
           to="/missing-entry"
@@ -97,7 +133,6 @@ const Sidebar = () => {
         >
           <ListItemText primary="Missing Entry" />
         </ListItem>
-
         <ListItem
           component={NavLink}
           to="/leave-request"
@@ -112,7 +147,6 @@ const Sidebar = () => {
         >
           <ListItemText primary="Leave Request" />
         </ListItem>
-
         {(user?.role == "manager" || user?.role == "system_admin") && (
           <ListItem
             component={NavLink}

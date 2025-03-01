@@ -16,7 +16,7 @@ const sessionSchema = new Schema(
         },
         check_out: {
             type: String,
-            required: true,
+            required: false,
         },
     },
     {

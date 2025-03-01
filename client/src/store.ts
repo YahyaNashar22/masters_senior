@@ -1,3 +1,4 @@
+import axios from "axios";
 import { create } from "zustand";
 
 type User = {
@@ -15,7 +16,9 @@ type AuthStore = {
   logout: () => void;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+const backend = import.meta.env.VITE_BACKEND;
+
+export const useAuthStore = create<AuthStore>((set, get) => ({
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
@@ -23,7 +26,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ user });
     localStorage.setItem("user", JSON.stringify(user)); // Persist user
   },
-  logout: () => {
+  logout: async () => {
+    const user = get().user; // Get the current user from the store
+
+    if (user) {
+      try {
+        await axios.get(`${backend}/users/logout/${user._id}`);
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    }
     set({ user: null });
     localStorage.removeItem("user"); // Clear on logout
   },

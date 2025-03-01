@@ -6,7 +6,7 @@ import Tasks from "../pages/Tasks";
 import Layout from "./Layout.tsx";
 import ChangePassword from "../pages/ChangePassword.tsx";
 import MissingEntry from "../pages/MissingEntry.tsx";
-import TakeAttendance from "../pages/TakeAttendance.tsx";
+// import TakeAttendance from "../pages/TakeAttendance.tsx";
 import LeaveRequest from "../pages/LeaveRequest.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import { Suspense } from "react";
@@ -35,7 +35,8 @@ const AppRoutes = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/missing-entry" element={<MissingEntry />} />
-            <Route path="/attendance" element={<TakeAttendance />} />
+            // ? Logic for this is included in the sign in/out apis
+            {/* <Route path="/attendance" element={<TakeAttendance />} /> */}
             <Route path="/leave-request" element={<LeaveRequest />} />
           </Route>
 
