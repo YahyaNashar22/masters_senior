@@ -9,10 +9,12 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const { user } = useAuthStore();
 
   if (!user) {
+    console.log("User is null. Redirecting to login...");
     return <Navigate to="/login" replace />;
   }
 
   if (!allowedRoles.includes(user.role)) {
+    console.log("User is not authorized. Redirecting to /");
     return <Navigate to="/" replace />;
   }
 

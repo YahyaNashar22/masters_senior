@@ -20,8 +20,6 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  console.log(user);
-
   return (
     <Drawer
       variant="permanent"

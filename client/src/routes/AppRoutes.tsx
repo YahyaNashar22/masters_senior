@@ -9,44 +9,48 @@ import MissingEntry from "../pages/MissingEntry.tsx";
 import TakeAttendance from "../pages/TakeAttendance.tsx";
 import LeaveRequest from "../pages/LeaveRequest.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import { Suspense } from "react";
+import Loading from "../components/Loading.tsx";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* Role-Based Protected Routes */}
-        <Route
-          element={
-            <ProtectedRoute
-              allowedRoles={[
-                "employee",
-                "manager",
-                "system_admin",
-                "supervisor",
-                "hr_personnel",
-              ]}
-            />
-          }
-        >
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          <Route path="/missing-entry" element={<MissingEntry />} />
-          <Route path="/attendance" element={<TakeAttendance />} />
-          <Route path="/leave-request" element={<LeaveRequest />} />
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* Role-Based Protected Routes */}
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "employee",
+                  "manager",
+                  "system_admin",
+                  "supervisor",
+                  "hr_personnel",
+                ]}
+              />
+            }
+          >
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/missing-entry" element={<MissingEntry />} />
+            <Route path="/attendance" element={<TakeAttendance />} />
+            <Route path="/leave-request" element={<LeaveRequest />} />
+          </Route>
+
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={["manager", "system_admin"]} />
+            }
+          >
+            <Route path="/users" element={<Users />} />
+          </Route>
         </Route>
 
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["manager", "system_admin"]} />
-          }
-        >
-          <Route path="/users" element={<Users />} />
-        </Route>
-      </Route>
-
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
-    </Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Suspense>
   );
 };
 
