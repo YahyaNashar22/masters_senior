@@ -12,6 +12,7 @@ import ProtectedRoute from "./ProtectedRoute.tsx";
 import { Suspense } from "react";
 import Loading from "../components/Loading.tsx";
 import ChangePasswordRequested from "../pages/ChangePasswordRequested.tsx";
+import UserProfile from "../pages/UserProfile.tsx";
 
 const AppRoutes = () => {
   return (
@@ -53,6 +54,7 @@ const AppRoutes = () => {
             }
           >
             <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserProfile />} />
           </Route>
         </Route>
 

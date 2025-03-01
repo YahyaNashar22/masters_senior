@@ -4,9 +4,11 @@ import { Button, CircularProgress, Container, Typography } from "@mui/material";
 import axios from "axios";
 import { useAuthStore } from "../store";
 import * as XLSX from "xlsx"; // Import xlsx
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const backend = import.meta.env.VITE_BACKEND;
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -51,8 +53,8 @@ const Users = () => {
   ];
 
   // Prepare data for the DataGrid
-  const rows = users.map((u, index) => ({
-    id: index + 1,
+  const rows = users.map((u) => ({
+    id: u._id,
     fullname: u.fullname,
     email: u.email,
     role: u.role,
@@ -64,6 +66,12 @@ const Users = () => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Users");
     XLSX.writeFile(wb, "users.xlsx");
+  };
+
+  // Handle row click to navigate to user profile
+  const handleRowClick = (params: any) => {
+    const userId = params.row.id;
+    navigate(`/users/${userId}`);
   };
 
   return (
@@ -80,6 +88,7 @@ const Users = () => {
           pageSizeOptions={[5, 10, 20]}
           autoHeight
           disableRowSelectionOnClick
+          onRowClick={handleRowClick}
           slots={{
             toolbar: () => (
               <div
