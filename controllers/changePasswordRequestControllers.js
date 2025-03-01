@@ -2,15 +2,23 @@ import ChangePasswordRequest from "../models/changePasswordRequestModel.js";
 
 export const createChangePasswordRequest = async (req, res) => {
     try {
-        const { user_id } = req.body;
+        const { email } = req.body;
 
-        const existingRequest = await ChangePasswordRequest.findOne({ user_id, status: "pending" });
+        const existingRequest = await ChangePasswordRequest.findOne({ email });
         if (existingRequest) {
-            return res.status(400).json({ message: "You already have a pending request" });
+            if (existingRequest.status == "pending") {
+                return res.status(404).json({ message: "You already have a pending request" });
+            }
+            if (existingRequest.status == "accepted") {
+                return res.status(203).json({ message: "Request approved. You can now change your password." });
+            }
+            if (existingRequest.status == "rejected") {
+                return res.status(404).json({ message: "Request rejected!" });
+            }
         }
 
         const newRequest = await ChangePasswordRequest.create({
-            user_id,
+            email,
             status: "pending",
         });
 

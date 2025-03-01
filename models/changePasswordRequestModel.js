@@ -5,9 +5,8 @@ const { Schema, model } = mongoose;
 
 const changePasswordSchema = new Schema(
     {
-        user_id: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
+        email: {
+            type: String,
             required: true,
         },
         status: {

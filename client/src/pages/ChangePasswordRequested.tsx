@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -7,45 +7,56 @@ import {
   CircularProgress,
 } from "@mui/material";
 import axios from "axios";
-import { useAuthStore } from "../store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const ChangePassword = () => {
+const ChangePasswordRequested = () => {
   const backend = import.meta.env.VITE_BACKEND;
+  const { search } = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Extract the email from the URL query parameters
+    const params = new URLSearchParams(search);
+    const emailFromUrl = params.get("email");
+
+    if (emailFromUrl) {
+      setEmail(emailFromUrl); // Set the email to state
+    } else {
+      navigate("/login"); // Redirect if no email is found in the URL
+    }
+  }, [search, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setError("All fields are required");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+    // Validate that email and new password are provided
+    if (!email || !newPassword) {
+      setError("Email and new password are required.");
       return;
     }
 
     setLoading(true);
     try {
       const response = await axios.post(
-        `${backend}/users/${user?._id}/change-password`,
+        `${backend}/users/change-password-requested`,
         {
-          currentPassword,
+          email,
           newPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
       console.log("Password changed:", response.data);
       alert("Password changed successfully!");
-      logout();
       navigate("/login");
     } catch (error) {
       console.error("Error changing password:", error);
@@ -72,12 +83,12 @@ const ChangePassword = () => {
       {error && <Typography color="error">{error}</Typography>}
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Current Password"
-          type="password"
+          label="Email"
+          type="email"
           fullWidth
           margin="normal"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          value={email}
+          aria-readonly
         />
 
         <TextField
@@ -87,15 +98,6 @@ const ChangePassword = () => {
           margin="normal"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-        />
-
-        <TextField
-          label="Confirm New Password"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
         <Button
@@ -108,9 +110,19 @@ const ChangePassword = () => {
         >
           {loading ? <CircularProgress size={24} /> : "Change Password"}
         </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          disabled={loading}
+          sx={{ mt: 2 }}
+          onClick={() => navigate("/login")}
+        >
+          {loading ? <CircularProgress size={24} /> : "Back"}
+        </Button>
       </form>
     </Box>
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordRequested;

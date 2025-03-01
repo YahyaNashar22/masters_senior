@@ -11,6 +11,7 @@ import LeaveRequest from "../pages/LeaveRequest.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import { Suspense } from "react";
 import Loading from "../components/Loading.tsx";
+import ChangePasswordRequested from "../pages/ChangePasswordRequested.tsx";
 
 const AppRoutes = () => {
   return (
@@ -49,6 +50,10 @@ const AppRoutes = () => {
 
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/change-password-requested"
+          element={<ChangePasswordRequested />}
+        />
       </Routes>
     </Suspense>
   );

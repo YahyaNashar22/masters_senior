@@ -8,7 +8,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useAuthStore } from "../store.ts"; // Import Zustand store
 import { useNavigate } from "react-router-dom";
 
@@ -19,15 +19,19 @@ type LoginFormInputs = {
 
 const Login = () => {
   const backend = import.meta.env.VITE_BACKEND;
-  const { login } = useAuthStore(); // Zustand store
+  const { login } = useAuthStore();
+  // Get the email value from the form
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<LoginFormInputs>();
+
+  const email = watch("email");
 
   const onSubmit = async (data: LoginFormInputs) => {
     setLoading(true);
@@ -44,6 +48,41 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const requestPassChange = async (email: string) => {
+    setLoading(true);
+
+    try {
+      if (email == "" || !email) {
+        alert("Please provide your email");
+        throw new Error("Please provide your email");
+      }
+      const res = await axios.post(
+        `${backend}/change-password-requests`,
+        { email },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (res.status === 203) {
+        alert(res.data.message);
+        navigate(`/change-password-requested?email=${email}`);
+      } else if (res.status === 404) {
+        alert(res.data.message);
+      } else if (res.status === 201) {
+        alert("Password change request sent successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError)
+        alert(
+          error?.response?.data?.message ||
+            "Something went wrong. Please try again."
+        );
     }
     setLoading(false);
   };
@@ -74,8 +113,8 @@ const Login = () => {
           <Controller
             name="password"
             control={control}
-            defaultValue=""
             rules={{ required: "Password is required" }}
+            defaultValue=""
             render={({ field }) => (
               <TextField
                 {...field}
@@ -99,6 +138,17 @@ const Login = () => {
             {loading ? <CircularProgress size={24} /> : "Login"}
           </Button>
         </form>
+        <Button
+          type="submit"
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          onClick={() => requestPassChange(email)}
+          sx={{ mt: 2 }}
+          disabled={loading}
+        >
+          Request Password Change
+        </Button>
       </Box>
     </Container>
   );

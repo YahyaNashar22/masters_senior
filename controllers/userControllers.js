@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import ChangePasswordRequest from "../models/changePasswordRequestModel.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -153,6 +154,37 @@ export const changePassword = async (req, res) => {
         // Update password
         user.password = hashedPassword;
         await user.save();
+
+        res.json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const changePasswordRequested = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        // Find user by ID
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // make sure change password has been requested
+        const passwordRequest = await ChangePasswordRequest.find({ email: user.email });
+        if (!passwordRequest) return res.status(404).json({ message: "Permission not requested" });
+
+
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update password
+        user.password = hashedPassword;
+        await user.save();
+
+        // Delete the password change request
+        await ChangePasswordRequest.deleteOne({ email: user.email });
 
         res.json({ message: "Password changed successfully" });
     } catch (error) {
