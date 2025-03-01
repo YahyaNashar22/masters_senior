@@ -10,9 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store.ts";
 import { NavLink } from "react-router-dom";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
-const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 10 minutes
+// const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 10 minutes
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -23,39 +23,40 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    let timeout;
+  // TODO: re-activate once done
+  // useEffect(() => {
+  //   let timeout;
 
-    const resetTimer = () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        alert("You have been logged out due to inactivity.");
-        handleLogout();
-      }, INACTIVITY_TIMEOUT);
-    };
+  //   const resetTimer = () => {
+  //     clearTimeout(timeout);
+  //     timeout = setTimeout(() => {
+  //       alert("You have been logged out due to inactivity.");
+  //       handleLogout();
+  //     }, INACTIVITY_TIMEOUT);
+  //   };
 
-    // Reset timer on user activity
-    const activityEvents = [
-      "mousemove",
-      "keydown",
-      "click",
-      "scroll",
-      "touchstart",
-    ];
-    activityEvents.forEach((event) =>
-      window.addEventListener(event, resetTimer)
-    );
+  //   // Reset timer on user activity
+  //   const activityEvents = [
+  //     "mousemove",
+  //     "keydown",
+  //     "click",
+  //     "scroll",
+  //     "touchstart",
+  //   ];
+  //   activityEvents.forEach((event) =>
+  //     window.addEventListener(event, resetTimer)
+  //   );
 
-    // Start the timer initially
-    resetTimer();
+  //   // Start the timer initially
+  //   resetTimer();
 
-    return () => {
-      clearTimeout(timeout);
-      activityEvents.forEach((event) =>
-        window.removeEventListener(event, resetTimer)
-      );
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //     activityEvents.forEach((event) =>
+  //       window.removeEventListener(event, resetTimer)
+  //     );
+  //   };
+  // }, []);
 
   return (
     <Drawer
@@ -89,7 +90,7 @@ const Sidebar = () => {
         >
           <ListItemText primary="Tasks" />
         </ListItem>
-        {/* Logic for this is included in the sign in/out apis */ }
+        {/* Logic for this is included in the sign in/out apis */}
         {/* 
         <ListItem
           component={NavLink}
@@ -147,7 +148,7 @@ const Sidebar = () => {
         >
           <ListItemText primary="Leave Request" />
         </ListItem>
-        {(user?.role == "manager" || user?.role == "system_admin") && (
+        {user?.role !== "employee" && (
           <ListItem
             component={NavLink}
             to="/users"
