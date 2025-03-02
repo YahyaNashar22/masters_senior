@@ -88,7 +88,7 @@ const Users = () => {
       width: 150,
       renderCell: (params: any) => (
         <>
-          {user?.role === "system_admin" && (
+          {user?.role === "system_admin" ? (
             <Select
               value={params.row.role}
               onChange={(e) => handleRoleChange(params.row.id, e.target.value)}
@@ -100,6 +100,8 @@ const Users = () => {
               <MenuItem value="manager">Manager</MenuItem>
               <MenuItem value="system_admin">Admin</MenuItem>
             </Select>
+          ) : (
+            <Typography>{params.row.role}</Typography>
           )}
         </>
       ),
