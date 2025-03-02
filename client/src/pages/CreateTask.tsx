@@ -74,6 +74,8 @@ const CreateTask = () => {
   useEffect(() => {
     if (user?.role === "supervisor") {
       setRole(["employee", "hr_personnel"]);
+    } else if (user?.role === "manager") {
+      setRole(["employee", "hr_personnel", "supervisor"]);
     } else {
       setRole([]);
     }
@@ -86,7 +88,7 @@ const CreateTask = () => {
       try {
         const res = await axios.post(
           `${backend}/users`,
-          { roles: role }, // Send an array of roles
+          { role: role }, // Send an array of roles
           {
             headers: { "Content-Type": "application/json" },
           }

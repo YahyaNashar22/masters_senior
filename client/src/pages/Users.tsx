@@ -17,7 +17,10 @@ const Users = () => {
   useEffect(() => {
     if (user?.role === "hr_personnel") {
       setRole(["employee"]);
-    } else {
+    } else if (user?.role === "manager") {
+      setRole(["employee", "hr_personnel", "supervisor"]);
+    }
+     else {
       setRole([]); // Set a default role for other users if needed
     }
   }, [user]);
