@@ -78,7 +78,7 @@ const Sidebar = () => {
       <List>
         <ListItem
           component={NavLink}
-          to="/tasks"
+          to="/"
           sx={{
             textDecoration: "none",
             color: "inherit",

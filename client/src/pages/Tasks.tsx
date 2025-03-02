@@ -12,7 +12,15 @@ import {
   FormControl,
   Select,
   MenuItem,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
 } from "@mui/material";
+import EscalatorIcon from "@mui/icons-material/Escalator";
 
 const Tasks = () => {
   const backend = import.meta.env.VITE_BACKEND;
@@ -29,6 +37,9 @@ const Tasks = () => {
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [updatingTask, setUpdatingTask] = useState<string | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
+  const [escalationReason, setEscalationReason] = useState<string>("");
 
   useEffect(() => {
     const getTasks = async () => {
@@ -74,6 +85,40 @@ const Tasks = () => {
       console.error("Error updating task status:", error);
     } finally {
       setUpdatingTask(null); // Remove loading state
+    }
+  };
+
+  // Open the dialog for escalating the task
+  const handleEscalateClick = (taskId: string) => {
+    setSelectedTask(taskId);
+    setOpenDialog(true);
+  };
+
+  // Handle escalating task
+  const handleEscalateTask = async () => {
+    if (selectedTask) {
+      try {
+        const res = await axios.post(
+          `${backend}/escalations`,
+          {
+            task_id: selectedTask,
+            requested_by: user?._id,
+            reason: escalationReason,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log(res);
+
+        // Close dialog after escalating
+        setOpenDialog(false);
+      } catch (error) {
+        console.error("Error escalating task:", error);
+      }
     }
   };
 
@@ -124,7 +169,7 @@ const Tasks = () => {
                       disabled={updatingTask === task._id} // Disable while updating
                       sx={{
                         borderRadius: 2, // Make corners rounder
-                        color:"white",
+                        color: "white",
                         backgroundColor:
                           task.status === "ongoing"
                             ? "orange"
@@ -155,6 +200,16 @@ const Tasks = () => {
                     </Select>
                   </FormControl>
 
+                  {/* Escalate Task Icon Button */}
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleEscalateClick(task._id)}
+                    disabled={updatingTask === task._id} // Disable while updating
+                    sx={{ mt: 1 }}
+                  >
+                    <EscalatorIcon />
+                  </IconButton>
+
                   {/* Loading indicator for status update */}
                   {updatingTask === task._id && (
                     <CircularProgress size={20} sx={{ mt: 1 }} />
@@ -165,6 +220,29 @@ const Tasks = () => {
           ))}
         </Grid>
       )}
+
+      {/* Dialog (Pop-Up) for Escalation */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Escalate Task</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Reason for Escalation"
+            fullWidth
+            multiline
+            rows={4}
+            value={escalationReason}
+            onChange={(e) => setEscalationReason(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEscalateTask} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

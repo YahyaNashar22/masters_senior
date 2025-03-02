@@ -34,7 +34,7 @@ const AppRoutes = () => {
               />
             }
           >
-            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/" element={<Tasks />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/missing-entry" element={<MissingEntry />} />
             // ? Logic for this is included in the sign in/out apis
