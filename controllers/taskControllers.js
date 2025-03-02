@@ -78,7 +78,12 @@ export const updateTaskStatus = async (req, res) => {
 
 export const updateTask = async (req, res) => {
     try {
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { assignee } = req.body
+        const updatedTask = await Task.findByIdAndUpdate(req.params.id, {
+            $set: {
+                assignee
+            }
+        }, { new: true });
 
         if (!updatedTask) {
             return res.status(404).json({ message: "Task not found" });

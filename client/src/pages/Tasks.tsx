@@ -33,6 +33,7 @@ const Tasks = () => {
       due_date: string;
       priority: "normal" | "high" | "low";
       status: "ongoing" | "completed" | "canceled" | "not_started";
+      assignee?: { _id: string; fullname: string } | null; // Assignee
     }[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,8 +45,13 @@ const Tasks = () => {
   useEffect(() => {
     const getTasks = async () => {
       setLoading(true);
+      let res;
       try {
-        const res = await axios.get(`${backend}/tasks/user/${user?._id}`);
+        if (user?.role === "manager" || user?.role === "system_admin") {
+          res = await axios.get(`${backend}/tasks`);
+        } else {
+          res = await axios.get(`${backend}/tasks/user/${user?._id}`);
+        }
         setTasks(res.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -152,6 +158,16 @@ const Tasks = () => {
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Due: {task.due_date || "No deadline"}
+                  </Typography>
+
+                  {/* Assignee */}
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Assignee:</strong>{" "}
+                    {task.assignee ? task.assignee.fullname : "Unassigned"}
                   </Typography>
 
                   {/* Priority Chip */}

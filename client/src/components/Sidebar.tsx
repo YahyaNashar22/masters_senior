@@ -10,9 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store.ts";
 import { NavLink } from "react-router-dom";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
-// const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 10 minutes
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 10 minutes
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -23,40 +23,39 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  // TODO: re-activate once done
-  // useEffect(() => {
-  //   let timeout;
+  useEffect(() => {
+    let timeout;
 
-  //   const resetTimer = () => {
-  //     clearTimeout(timeout);
-  //     timeout = setTimeout(() => {
-  //       alert("You have been logged out due to inactivity.");
-  //       handleLogout();
-  //     }, INACTIVITY_TIMEOUT);
-  //   };
+    const resetTimer = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        alert("You have been logged out due to inactivity.");
+        handleLogout();
+      }, INACTIVITY_TIMEOUT);
+    };
 
-  //   // Reset timer on user activity
-  //   const activityEvents = [
-  //     "mousemove",
-  //     "keydown",
-  //     "click",
-  //     "scroll",
-  //     "touchstart",
-  //   ];
-  //   activityEvents.forEach((event) =>
-  //     window.addEventListener(event, resetTimer)
-  //   );
+    // Reset timer on user activity
+    const activityEvents = [
+      "mousemove",
+      "keydown",
+      "click",
+      "scroll",
+      "touchstart",
+    ];
+    activityEvents.forEach((event) =>
+      window.addEventListener(event, resetTimer)
+    );
 
-  //   // Start the timer initially
-  //   resetTimer();
+    // Start the timer initially
+    resetTimer();
 
-  //   return () => {
-  //     clearTimeout(timeout);
-  //     activityEvents.forEach((event) =>
-  //       window.removeEventListener(event, resetTimer)
-  //     );
-  //   };
-  // }, []);
+    return () => {
+      clearTimeout(timeout);
+      activityEvents.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+    };
+  }, []);
 
   return (
     <Drawer
@@ -185,23 +184,6 @@ const Sidebar = () => {
         {(user?.role === "manager" || user?.role === "system_admin") && (
           <ListItem
             component={NavLink}
-            to="/create-user"
-            sx={{
-              textDecoration: "none",
-              color: "inherit",
-              "&.active": {
-                bgcolor: "primary.light",
-                color: "primary.contrastText",
-              },
-            }}
-          >
-            <ListItemText primary="Create User" />
-          </ListItem>
-        )}
-
-        {(user?.role === "manager" || user?.role === "system_admin") && (
-          <ListItem
-            component={NavLink}
             to="/review-change-password-requests"
             sx={{
               textDecoration: "none",
@@ -213,6 +195,40 @@ const Sidebar = () => {
             }}
           >
             <ListItemText primary="Review Password Requests" />
+          </ListItem>
+        )}
+
+        {(user?.role === "manager" || user?.role === "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/review-escalation-requests"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Review Escalation Requests" />
+          </ListItem>
+        )}
+
+        {user?.role === "system_admin" && (
+          <ListItem
+            component={NavLink}
+            to="/create-user"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Create User" />
           </ListItem>
         )}
       </List>
