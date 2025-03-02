@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import ChangePasswordRequest from "../models/changePasswordRequestModel.js";
 import Session from "../models/sessionModel.js";
+import LeaveRequest from "../models/leaveRequestModel.js";
+import IncorrectAttendanceRequest from "../models/incorrectAttendanceRequestModel.js";
+import EscalationRequest from "../models/escalationRequestModel.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -257,3 +260,35 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getUserInfo = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const sessions = await Session.find({ user_id: userId });
+        const leaveRequests = await LeaveRequest.find({ user_id: userId });
+        const incorrectAttendanceRequests = await IncorrectAttendanceRequest.find({ user_id: userId });
+        const escalationRequests = await EscalationRequest.find({ requested_by: userId });
+        const changePasswordRequests = await ChangePasswordRequest.find({ email: user.email });
+
+        return res.status(200).json({
+            user: {
+                id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+                role: user.role,
+            },
+            sessions,
+            leaveRequests,
+            incorrectAttendanceRequests,
+            escalationRequests,
+            changePasswordRequests,
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}

@@ -10,6 +10,7 @@ import {
     changeSupervisor,
     changePasswordRequested,
     logout,
+    getUserInfo,
 } from "../controllers/userControllers.js";
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.post("/login", loginUser);
 router.get("/logout/:user_id", logout);
 
 router.post("/", getUsers);
+router.post("/get-user-info", getUserInfo);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
 router.post("/:id/change-password", changePassword);
