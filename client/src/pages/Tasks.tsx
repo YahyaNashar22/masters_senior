@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store";
 import {
@@ -98,7 +98,7 @@ const Tasks = () => {
   const handleEscalateTask = async () => {
     if (selectedTask) {
       try {
-        const res = await axios.post(
+        await axios.post(
           `${backend}/escalations`,
           {
             task_id: selectedTask,
@@ -112,12 +112,20 @@ const Tasks = () => {
           }
         );
 
-        console.log(res);
-
         // Close dialog after escalating
         setOpenDialog(false);
+        alert("Task escalated successfully.");
       } catch (error) {
-        console.error("Error escalating task:", error);
+        if (
+          error instanceof AxiosError &&
+          error.response &&
+          error.response.status === 401
+        ) {
+          // Handle 401 error (Escalation request already created)
+          alert(error.response.data.message);
+        } else {
+          console.error("Error escalating task:", error);
+        }
       }
     }
   };

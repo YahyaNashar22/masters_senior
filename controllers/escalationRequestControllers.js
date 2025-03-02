@@ -4,6 +4,12 @@ export const createEscalationRequest = async (req, res) => {
     try {
         const { task_id, requested_by, reason } = req.body;
 
+        const prevRequest = await EscalationRequest.find({ task_id });
+
+        if (prevRequest) {
+            return res.status(401).json({ message: "escalation request already created" })
+        }
+
         const newRequest = await EscalationRequest.create({
             task_id,
             requested_by,
