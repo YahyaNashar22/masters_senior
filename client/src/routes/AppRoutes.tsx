@@ -14,6 +14,8 @@ import Loading from "../components/Loading.tsx";
 import ChangePasswordRequested from "../pages/ChangePasswordRequested.tsx";
 import UserProfile from "../pages/UserProfile.tsx";
 import CreateTask from "../pages/CreateTask.tsx";
+import CreateUserForm from "../components/CreateUserForm.tsx";
+import ReviewChangePasswordRequests from "../pages/ReviewChangePasswordRequests.tsx";
 
 const AppRoutes = () => {
   return (
@@ -61,6 +63,18 @@ const AppRoutes = () => {
             }
           >
             <Route path="/create-task" element={<CreateTask />} />
+          </Route>
+
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={["manager", "system_admin"]} />
+            }
+          >
+            <Route path="/create-user" element={<CreateUserForm />} />
+            <Route
+              path="/review-change-password-requests"
+              element={<ReviewChangePasswordRequests />}
+            />
           </Route>
         </Route>
 

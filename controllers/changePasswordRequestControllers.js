@@ -31,7 +31,7 @@ export const createChangePasswordRequest = async (req, res) => {
 
 export const getAllChangePasswordRequests = async (req, res) => {
     try {
-        const requests = await ChangePasswordRequest.find().populate("user_id", "fullname email");
+        const requests = await ChangePasswordRequest.find();
         res.json(requests);
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.post("/", createChangePasswordRequest); // Create a new change password request
-router.get("/", getAllChangePasswordRequests); // Get all requests (Admin or HR)
+router.get("/", getAllChangePasswordRequests); // Get all requests (manager or system_admin)
 router.get("/user/:user_id", getUserChangePasswordRequests); // Get requests for a specific user
 router.put("/:id/status", updateChangePasswordStatus); // Approve or reject a request
 router.delete("/:id", deleteChangePasswordRequest); // Delete a request

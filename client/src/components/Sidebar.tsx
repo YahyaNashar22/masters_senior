@@ -181,6 +181,40 @@ const Sidebar = () => {
             <ListItemText primary="Create Task" />
           </ListItem>
         )}
+
+        {(user?.role === "manager" || user?.role === "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/create-user"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Create User" />
+          </ListItem>
+        )}
+
+        {(user?.role === "manager" || user?.role === "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/review-change-password-requests"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Review Password Requests" />
+          </ListItem>
+        )}
       </List>
 
       <Box
