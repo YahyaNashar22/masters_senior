@@ -1,6 +1,13 @@
 import { Suspense, useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, CircularProgress, Container, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Container,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { useAuthStore } from "../store";
 import * as XLSX from "xlsx"; // Import xlsx
@@ -20,6 +27,14 @@ const Users = () => {
       setRole(["employee"]);
     } else if (user?.role === "manager") {
       setRole(["employee", "hr_personnel", "supervisor"]);
+    } else if (user?.role === "system_admin") {
+      setRole([
+        "employee",
+        "hr_personnel",
+        "supervisor",
+        "manager",
+        "system_admin",
+      ]);
     } else {
       setRole([]); // Set a default role for other users if needed
     }
@@ -48,11 +63,47 @@ const Users = () => {
     handleFetchUsers();
   }, [backend, role, user]);
 
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      await axios.put(
+        `${backend}/users/${userId}`,
+        { role: newRole },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u._id === userId ? { ...u, role: newRole } : u))
+      );
+    } catch (error) {
+      console.error("Error updating user role:", error);
+    }
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "fullname", headerName: "Full Name", width: 200 },
     { field: "email", headerName: "Email", width: 250 },
-    { field: "role", headerName: "Role", width: 150 },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 150,
+      renderCell: (params: any) => (
+        <>
+          {user?.role === "system_admin" && (
+            <Select
+              value={params.row.role}
+              onChange={(e) => handleRoleChange(params.row.id, e.target.value)}
+              fullWidth
+            >
+              <MenuItem value="employee">Employee</MenuItem>
+              <MenuItem value="hr_personnel">HR Personnel</MenuItem>
+              <MenuItem value="supervisor">Supervisor</MenuItem>
+              <MenuItem value="manager">Manager</MenuItem>
+              <MenuItem value="system_admin">Admin</MenuItem>
+            </Select>
+          )}
+        </>
+      ),
+    },
     {
       field: "status",
       headerName: "Status",
