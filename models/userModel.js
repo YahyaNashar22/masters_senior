@@ -32,8 +32,8 @@ const userSchema = new Schema(
         status: {
             type: String,
             required: true,
-            enum: ["idle", "blocked", "active", "logged_out"],
-            default: "logged_out"
+            enum: ["blocked", "active"],
+            default: "active"
         },
         supervisor_id: {
             type: Schema.Types.ObjectId,

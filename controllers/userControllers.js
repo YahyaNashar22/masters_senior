@@ -55,6 +55,10 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
+        if (user.status === 'blocked') {
+            return res.status(400).json({ message: "Access Denied! Account Blocked" })
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
@@ -282,6 +286,7 @@ export const getUserInfo = async (req, res) => {
                 fullname: user.fullname,
                 email: user.email,
                 role: user.role,
+                status: user.status,
             },
             sessions,
             leaveRequests,

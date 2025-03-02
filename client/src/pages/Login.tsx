@@ -40,6 +40,10 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
 
+      if (res.status == 400) {
+        alert(res.data.message);
+      }
+
       console.log("Login Response:", res.data);
       login(res.data); // Store user in Zustand
 
@@ -48,6 +52,13 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+
+      if (error instanceof AxiosError) {
+        alert(
+          error?.response?.data?.message ||
+            "Something went wrong. Please try again."
+        );
+      }
     }
     setLoading(false);
   };
@@ -71,18 +82,19 @@ const Login = () => {
       if (res.status === 203) {
         alert(res.data.message);
         navigate(`/change-password-requested?email=${email}`);
-      } else if (res.status === 404) {
+      } else if (res.status === 404 || res.status == 400) {
         alert(res.data.message);
       } else if (res.status === 201) {
         alert("Password change request sent successfully");
       }
     } catch (error) {
       console.log(error);
-      if (error instanceof AxiosError)
+      if (error instanceof AxiosError) {
         alert(
           error?.response?.data?.message ||
             "Something went wrong. Please try again."
         );
+      }
     }
     setLoading(false);
   };
