@@ -148,7 +148,7 @@ const Sidebar = () => {
         >
           <ListItemText primary="Leave Request" />
         </ListItem>
-        {user?.role !== "employee" && (
+        {user?.role !== "employee" && user?.role !== "supervisor" && (
           <ListItem
             component={NavLink}
             to="/users"
@@ -162,6 +162,23 @@ const Sidebar = () => {
             }}
           >
             <ListItemText primary="Users" />
+          </ListItem>
+        )}
+
+        {user?.role !== "employee" && user?.role !== "hr_personnel" && (
+          <ListItem
+            component={NavLink}
+            to="/create-task"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Create Task" />
           </ListItem>
         )}
       </List>

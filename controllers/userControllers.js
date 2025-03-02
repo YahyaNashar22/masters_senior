@@ -100,8 +100,10 @@ export const getUsers = async (req, res) => {
             }
             : {};
 
-        // Include role filter if provided
-        const roleFilter = role ? { role } : {};
+        // Include role filter if roles array is provided and non-empty
+        const roleFilter = role && Array.isArray(role) && role.length > 0
+            ? { role: { $in: role } }
+            : {};
 
         // Find users based on search and role filters
         const users = await User.find({ ...searchQuery, ...roleFilter });

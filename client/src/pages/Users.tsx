@@ -12,13 +12,13 @@ const Users = () => {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<any[]>([]);
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string[]>([]);
 
   useEffect(() => {
     if (user?.role === "hr_personnel") {
-      setRole("employee");
+      setRole(["employee"]);
     } else {
-      setRole(""); // Set a default role for other users if needed
+      setRole([]); // Set a default role for other users if needed
     }
   }, [user]);
 

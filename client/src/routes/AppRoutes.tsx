@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import Loading from "../components/Loading.tsx";
 import ChangePasswordRequested from "../pages/ChangePasswordRequested.tsx";
 import UserProfile from "../pages/UserProfile.tsx";
+import CreateTask from "../pages/CreateTask.tsx";
 
 const AppRoutes = () => {
   return (
@@ -44,17 +45,22 @@ const AppRoutes = () => {
           <Route
             element={
               <ProtectedRoute
-                allowedRoles={[
-                  "manager",
-                  "system_admin",
-                  "supervisor",
-                  "hr_personnel",
-                ]}
+                allowedRoles={["manager", "system_admin", "hr_personnel"]}
               />
             }
           >
             <Route path="/users" element={<Users />} />
             <Route path="/users/:id" element={<UserProfile />} />
+          </Route>
+
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={["manager", "system_admin", "supervisor"]}
+              />
+            }
+          >
+            <Route path="/create-task" element={<CreateTask />} />
           </Route>
         </Route>
 
