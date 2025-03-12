@@ -76,7 +76,10 @@ const CreateTask = () => {
       setRole(["employee", "hr_personnel"]);
     } else if (user?.role === "manager") {
       setRole(["employee", "hr_personnel", "supervisor"]);
-    } else {
+    } else if (user?.role === "system_admin") {
+      setRole(["employee", "hr_personnel", "supervisor", "manager", "system_admin"]);
+    }
+     else {
       setRole([]);
     }
   }, [user]);
