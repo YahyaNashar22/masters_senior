@@ -17,6 +17,8 @@ import CreateTask from "../pages/CreateTask.tsx";
 import CreateUserForm from "../components/CreateUserForm.tsx";
 import ReviewChangePasswordRequests from "../pages/ReviewChangePasswordRequests.tsx";
 import ReviewEscalationRequests from "../pages/ReviewEscalationRequests.tsx";
+import ReviewIncorrectAttendanceRequests from "../pages/ReviewIncorrectAttendanceRequests.tsx";
+import ReviewLeaveRequests from "../pages/ReviewLeaveRequests.tsx";
 
 const AppRoutes = () => {
   return (
@@ -78,6 +80,14 @@ const AppRoutes = () => {
             <Route
               path="/review-escalation-requests"
               element={<ReviewEscalationRequests />}
+            />
+            <Route
+              path="/review-incorrect-attendance-requests"
+              element={<ReviewIncorrectAttendanceRequests />}
+            />
+            <Route
+              path="/review-leave-requests"
+              element={<ReviewLeaveRequests />}
             />
           </Route>
 

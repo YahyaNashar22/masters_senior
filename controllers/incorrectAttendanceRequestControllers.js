@@ -67,7 +67,7 @@ export const updateIncorrectAttendanceStatus = async (req, res) => {
             {
                 from: process.env.SENDER_EMAIL,
                 to: request.user_id.email,
-                subject: "Change Password Request",
+                subject: "Incorrect Attendance Request",
                 html: `<!DOCTYPE html>
         <html lang="en">
         <head>

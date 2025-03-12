@@ -66,8 +66,8 @@ export const updateLeaveStatus = async (req, res) => {
         await transporter.sendMail(
             {
                 from: process.env.SENDER_EMAIL,
-                to: request.user_id.email,
-                subject: "Change Password Request",
+                to: leaveRequest.user_id.email,
+                subject: "Leave Request",
                 html: `<!DOCTYPE html>
         <html lang="en">
         <head>

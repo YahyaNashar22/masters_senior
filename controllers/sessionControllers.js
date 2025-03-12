@@ -56,8 +56,8 @@ export const updateSession = async (req, res) => {
         await transporter.sendMail(
             {
                 from: process.env.SENDER_EMAIL,
-                to: request.user_id.email,
-                subject: "Change Password Request",
+                to: session.user_id.email,
+                subject: "Session update",
                 html: `<!DOCTYPE html>
 <html lang="en">
 <head>

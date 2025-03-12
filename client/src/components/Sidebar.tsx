@@ -215,6 +215,40 @@ const Sidebar = () => {
           </ListItem>
         )}
 
+        {(user?.role === "manager" || user?.role === "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/review-incorrect-attendance-requests"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Review Incorrect Attendance Requests" />
+          </ListItem>
+        )}
+
+{(user?.role === "manager" || user?.role === "system_admin") && (
+          <ListItem
+            component={NavLink}
+            to="/review-leave-requests"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "&.active": {
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+              },
+            }}
+          >
+            <ListItemText primary="Review Leave Requests" />
+          </ListItem>
+        )}
+
         {user?.role === "system_admin" && (
           <ListItem
             component={NavLink}
