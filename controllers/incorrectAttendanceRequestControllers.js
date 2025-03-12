@@ -1,4 +1,5 @@
 import IncorrectAttendanceRequest from "../models/incorrectAttendanceRequestModel.js";
+import transporter from "../utils/nodemailerTransporter.js";
 
 
 export const createIncorrectAttendanceRequest = async (req, res) => {
@@ -53,7 +54,7 @@ export const updateIncorrectAttendanceStatus = async (req, res) => {
             return res.status(400).json({ message: "Invalid status update" });
         }
 
-        const request = await IncorrectAttendanceRequest.findById(req.params.id);
+        const request = await IncorrectAttendanceRequest.findById(req.params.id).populate("user_id");
         if (!request) {
             return res.status(404).json({ message: "Incorrect attendance request not found" });
         }
@@ -61,6 +62,28 @@ export const updateIncorrectAttendanceStatus = async (req, res) => {
         request.status = status;
         request.approved_by = approved_by;
         await request.save();
+
+        await transporter.sendMail(
+            {
+                from: process.env.SENDER_EMAIL,
+                to: request.user_id.email,
+                subject: "Change Password Request",
+                html: `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email</title>
+        </head>
+        <body>
+            <p>
+                Request ${status} 
+            </p>
+        </body>
+        </html>`,
+            }
+        ).then(() => console.log("sent"))
+            .catch(() => console.log("unable to send"));
 
         res.json({ message: `Incorrect attendance request ${status}`, request });
     } catch (error) {

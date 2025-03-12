@@ -1,4 +1,5 @@
 import Session from "../models/sessionModel.js";
+import transporter from "../utils/nodemailerTransporter.js";
 
 export const createSession = async (req, res) => {
     try {
@@ -45,12 +46,34 @@ export const updateSession = async (req, res) => {
     try {
         const { check_out } = req.body;
 
-        const session = await Session.findById(req.params.id);
+        const session = await Session.findById(req.params.id).populate("user_id");
         if (!session) return res.status(404).json({ message: "Session not found" });
 
         // Update session check-out time
         session.check_out = check_out;
         await session.save();
+
+        await transporter.sendMail(
+            {
+                from: process.env.SENDER_EMAIL,
+                to: request.user_id.email,
+                subject: "Change Password Request",
+                html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+</head>
+<body>
+    <p>
+        Session updated successfully 
+    </p>
+</body>
+</html>`,
+            }
+        ).then(() => console.log("sent"))
+            .catch(() => console.log("unable to send"));
 
         res.json(session);
     } catch (error) {

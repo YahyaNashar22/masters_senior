@@ -3,8 +3,6 @@ import nodemailer from "nodemailer";
 
 dotenv.config();
 
-// TODO: Add the correct nodeMailer credentials
-
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,

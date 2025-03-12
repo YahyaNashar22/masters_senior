@@ -1,4 +1,5 @@
 import ChangePasswordRequest from "../models/changePasswordRequestModel.js";
+import transporter from "../utils/nodemailerTransporter.js";
 
 export const createChangePasswordRequest = async (req, res) => {
     try {
@@ -71,6 +72,28 @@ export const updateChangePasswordStatus = async (req, res) => {
         request.status = status;
         request.approved_by = approved_by;
         await request.save();
+
+        await transporter.sendMail(
+            {
+                from: process.env.SENDER_EMAIL,
+                to: request.email,
+                subject: "Change Password Request",
+                html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+</head>
+<body>
+    <p>
+        Request ${status} 
+    </p>
+</body>
+</html>`,
+            }
+        ).then(() => console.log("sent"))
+            .catch(() => console.log("unable to send"));
 
         res.json({ message: `Change password request ${status}`, request });
     } catch (error) {
